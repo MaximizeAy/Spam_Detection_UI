@@ -24,29 +24,29 @@ The application is split into two distinct parts to ensure security and performa
 *   **Backend (Python API):** Hosts the ML model, executes the rule engine, and processes the text. Secret API keys and model weights live safely here.
 
 
-                                                                                      +----------------------+
-                                                                                      |     React Frontend   |
-                                                                                      +----------+-----------+
-                                                                                              |
-                                                                                      HTTP Requests
-                                                                                              |
-                                                                                              ▼
-                                                                                      +----------------------+
-                                                                                      |      FastAPI API     |
-                                                                                      +----------+-----------+
-                                                                                              |
-                                                                              +----------------+----------------+
-                                                                              |                                 |
-                                                                              ▼                                 ▼
-                                                                      Rule-Based Engine              Soft Voting Ensemble
-                                                                              |                                 |
-                                                                              +----------------+----------------+
-                                                                                              |
-                                                                                              ▼
-                                                                                      Fusion Decision Engine
-                                                                                              |
-                                                                                              ▼
-                                                                                      Final Prediction
+                                        +----------------------+
+                                        |     React Frontend   |
+                                        +----------+-----------+
+                                                |
+                                        HTTP Requests
+                                                |
+                                                ▼
+                                        +----------------------+
+                                        |      FastAPI API     |
+                                        +----------+-----------+
+                                                |
+                                +----------------+----------------+
+                                |                                 |
+                                ▼                                 ▼
+                        Rule-Based Engine              Soft Voting Ensemble
+                                |                                 |
+                                +----------------+----------------+
+                                                |
+                                                ▼
+                                        Fusion Decision Engine
+                                                |
+                                                ▼
+                                        Final Prediction
 
 **⚠️ Security Note:** API keys are **never** stored in frontend `.env` files. The React app only knows the base URL of the backend API.
 

@@ -23,7 +23,7 @@ The application is split into two distinct parts to ensure security and performa
 *   **Frontend (React + Vite):** Handles UI, state management, file parsing, and theme toggling. Completely public-facing.
 *   **Backend (Python API):** Hosts the ML model, executes the rule engine, and processes the text. Secret API keys and model weights live safely here.
 
-                    ```
+                    
 
                                     +----------------------+
                                     |     React Frontend   |

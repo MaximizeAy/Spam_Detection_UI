@@ -23,6 +23,7 @@ The application is split into two distinct parts to ensure security and performa
 *   **Frontend (React + Vite):** Handles UI, state management, file parsing, and theme toggling. Completely public-facing.
 *   **Backend (Python API):** Hosts the ML model, executes the rule engine, and processes the text. Secret API keys and model weights live safely here.
 
+<<<<<<< HEAD
                     
 
                                     +----------------------+
@@ -48,6 +49,31 @@ The application is split into two distinct parts to ensure security and performa
                                             |
                                             ▼
                                     Final Prediction
+=======
+                                                                +----------------------+
+                                                                |     React Frontend   |
+                                                                +----------+-----------+
+                                                                           |
+                                                                  HTTP Requests
+                                                                           |
+                                                                           ▼
+                                                                +----------------------+
+                                                                |      FastAPI API     |
+                                                                +----------+-----------+
+                                                                           |
+                                                          +----------------+----------------+
+                                                          |                                 |
+                                                          ▼                                 ▼
+                                                  Rule-Based Engine              Soft Voting Ensemble
+                                                          |                                 |
+                                                          +----------------+----------------+
+                                                                           |
+                                                                           ▼
+                                                                Fusion Decision Engine
+                                                                           |
+                                                                           ▼
+                                                                  Final Prediction
+>>>>>>> bfbddbe52b7c574fa6cbd9e4c758680dabef5347
 
 **⚠️ Security Note:** API keys are **never** stored in frontend `.env` files. The React app only knows the base URL of the backend API.
 

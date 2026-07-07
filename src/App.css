@@ -278,3 +278,23 @@ textarea, input {
   .loader.cold-start .loader-text {
     color: var(--fg-muted);
   }
+
+/* Fix for mobile view cutting off the last metric */
+.results-stream,
+.results-container,
+.metric-list,
+.features-grid {
+  /* Prevents content from being clipped */
+  overflow: visible !important; 
+  
+  /* Adds padding to the bottom so the last item has room to render */
+  padding-bottom: 2rem !important; 
+}
+
+/* If your metrics are using flexbox, ensure they can wrap */
+.metric-list,
+.features-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}

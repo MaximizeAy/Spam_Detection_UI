@@ -63,11 +63,34 @@ function RuleMetrics({ features }) {
 }
 
 export default function Results({ data }) {
-  const { final_verdict: classification, final_confidence: confidence, ml, rules, strategy, override_reason: overrideReason, meta } = data;
+  const { final_verdict: classification, final_confidence: confidence, rules, strategy, override_reason: overrideReason, meta } = data;
   
   const [animated, setAnimated] = useState(false);
   const [displayValue, setDisplayValue] = useState(0);
-  const [isOpen, setIsOpen] = useState(false); // <-- ADDED STATE FOR DROPDOWN
+  const [isOpen, setIsOpen] = useState(false); 
+  
+  // --- NEW: State for Health Endpoint Data ---
+  const [systemInfo, setSystemInfo] = useState({ model: 'Loading...', version: '...' });
+
+  // --- NEW: Fetch from /health on component mount ---
+  useEffect(() => {
+    const fetchHealth = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+        const res = await fetch(`${baseUrl}/health`);
+        const healthData = await res.json();
+        setSystemInfo({ 
+          model: healthData.model || 'Unknown Model', 
+          version: healthData.version || '?.?.?' 
+        });
+      } catch (err) {
+        // Fallback if the API is asleep or fails
+        setSystemInfo({ model: 'SpamLens AI', version: '1.0' });
+      }
+    };
+
+    fetchHealth();
+  }, []);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
@@ -133,26 +156,27 @@ export default function Results({ data }) {
         </div>
 
         {/* Metrics */}
-        <div style={{ padding: '24px', borderBottom: '1px solid var(--border)' }} className="stagger-up" style={{ animationDelay: '0.25s' }}>
+        {/* FIX: Removed duplicate style={{}} attributes which React ignores */}
+        <div className="stagger-up" style={{ padding: '24px', borderBottom: '1px solid var(--border)', animationDelay: '0.25s' }}>
           <RuleMetrics features={rules.features} />
         </div>
 
         {/* Model Strip */}
         <div className="model-strip stagger-up" style={{ animationDelay: '0.35s' }}>
-          Powered by {ml.model} v{ml.version}
+          Engine: {systemInfo.model} (v{systemInfo.version})
         </div>
 
-        {/* FIX: Dropdown Toggle */}
+        {/* Dropdown Toggle */}
         <button 
           className={`details-trigger stagger-up ${isOpen ? 'open' : ''}`} 
           style={{ animationDelay: '0.4s' }} 
-          onClick={() => setIsOpen(!isOpen)} // <-- ADDED ONCLICK
+          onClick={() => setIsOpen(!isOpen)}
         >
           <span><i className="fa-solid fa-list-check" style={{ marginRight: '8px', opacity: 0.7 }}></i>Why did it get this score?</span>
           <i className="fa-solid fa-chevron-down chevron"></i>
         </button>
         
-        {/* FIX: Dropdown Content (Driven by state) */}
+        {/* Dropdown Content */}
         <div className={`details-content ${isOpen ? 'open' : ''}`}>
           <div className="features-section">
             <div className="features-title">Detailed Rule Breakdown</div>
@@ -168,7 +192,6 @@ export default function Results({ data }) {
                   </div>
                   <div className="feature-bar-wrap">
                     <div className="feature-bar-track">
-                      {/* FIX: Bars animate based on isOpen state so they trigger visually when uncollapsed */}
                       <div 
                         className={`feature-bar-fill ${f.severity}`} 
                         style={{ width: isOpen ? `${barPct}%` : '0%' }} 
